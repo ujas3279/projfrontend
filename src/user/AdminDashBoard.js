@@ -49,14 +49,14 @@ const AdminDashBoard = () => {
         <h4 className="card-header">Admin Information</h4>
         <ul className="list-group">
           <li className="list-group-item">
-            <span className="badge badge-success mr-2">Name:</span> {name}
+            <span className="badge alert-success mr-2">Name:</span> {name}
           </li>
           <li className="list-group-item">
-            <span className="badge badge-success mr-2">Email:</span> {email}
+            <span className="badge alert-success mr-2">Email:</span> {email}
           </li>
 
           <li className="list-group-item">
-            <span className="badge badge-denger">Admin Area</span>
+            <span className="badge alert-danger">Admin Area</span>
           </li>
         </ul>
       </div>
