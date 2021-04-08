@@ -1,4 +1,8 @@
+import React,{useState} from 'react'
 import { API } from "../../backend";
+
+
+
 
 //category calls
 export const createCategory = (userId, token, category) => {
@@ -58,6 +62,11 @@ export const updateCategory = (categoryId,userId, token,category) => {
 
 // delete categories
 export const deleteCategory = (categoryId, userId, token) => {
+  
+  
+
+
+
   return fetch(`${API}/category/${categoryId}/${userId}`, {
     method: "DELETE",
     headers: {
@@ -66,6 +75,26 @@ export const deleteCategory = (categoryId, userId, token) => {
     }
   })
     .then(response => {
+      getProducts().then(data => {
+        if(data.error){
+            console.log(data.error);
+        }
+        else{
+            data.map((product,index) => {
+              console.log(product.category);
+              if(product.category===null)
+              {
+                deleteProduct(product._id,userId,token).then( data => {
+                  if(data.error){
+                      console.log(data.error);
+                  }
+              })
+              }
+            })
+            
+        }
+    })
+      
       return response.json();
     })
     .catch(err => console.log(err));
