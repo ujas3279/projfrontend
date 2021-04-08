@@ -20,10 +20,18 @@ const UpdateCategory = ({match}) => {
             if (data.error) {
               setError(data.error)
             } else {
+             preloadCategories()
               setName(data.name)
                
             }
           });
+    }
+    const preloadCategories = ()=>{
+        getCategory().then(data=>{
+            if(data.error){
+                setError(data.error)
+            }
+        })
     }
 
     useEffect(() => {
