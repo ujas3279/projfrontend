@@ -67,7 +67,7 @@ const Card = ({
           <p className="lead bg-success font-weight-normal text-wrap">
             {cartDescrption}
           </p>
-          <p className="btn btn-success rounded  btn-sm px-4">$ {cartPrice}</p>
+          <p className="btn btn-success rounded  btn-sm px-4"> <i class="fa fa-inr"></i> {cartPrice}</p>
           <div className="row">
             <div className="col-12">{showAddToCart(addtoCart)}</div>
             <div className="col-12">{showRemoveFromCart(removeFromCart)}</div>

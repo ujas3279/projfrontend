@@ -86,7 +86,7 @@ let famount=0;
 
   return (
     <div>
-      <h3 className="text-white">Total Amount {getFinalAmount()}$</h3>
+      <h3 className="text-white">Total Amount <i class="fa fa-inr"></i> {getFinalAmount()}</h3>
       {showStripeButton()}
     </div>
   );
