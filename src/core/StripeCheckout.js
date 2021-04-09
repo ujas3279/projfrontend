@@ -20,12 +20,13 @@ const StripeCheckout = ({
 
   const usertoken = isAutheticated() && isAutheticated().token;
   const userId = isAutheticated() && isAutheticated().user._id;
-
+let famount=0;
   const getFinalAmount = () => {
     let amount = 0;
     products.map(p => {
       amount = amount + p.price;
     });
+    famount=amount;
     return amount;
   };
 
@@ -44,17 +45,22 @@ const StripeCheckout = ({
     })
       .then(response => {
         console.log(response);
+        console.log(token.card.address_line1);
+        let useraddress=token.card.name +","+token.card.address_line1+","+token.card.address_city+","+token.card.address_zip+","+token.card.address_country;
+        console.log(useraddress);
         const orderData={
             products:products,
-            transaction_id:10,
-            amount:499
+            transaction_id:token.card.id,
+            amount:famount,
+            address:useraddress
         }
-        createOrder(userId, usertoken, orderData);
         cartEmpty(()=>{
 
         })
+        createOrder(userId, usertoken, orderData);
+        
         setReload(!reload);
-        console.log(response.name)
+        console.log(response.status);
       })
       .catch(error => console.log(error));
   };
@@ -66,6 +72,7 @@ const StripeCheckout = ({
         token={makePayment}
         amount={getFinalAmount() * 100}
         name="Buy Tshirts"
+        currency="inr"
         shippingAddress
       >
         <button className="btn btn-success">Process To Checkout</button>
@@ -79,7 +86,7 @@ const StripeCheckout = ({
 
   return (
     <div>
-      <h3 className="text-white">Total Amount {getFinalAmount()}$</h3>
+      <h3 className="text-white">Total Amount <i class="fa fa-inr"></i> {getFinalAmount()}</h3>
       {showStripeButton()}
     </div>
   );
