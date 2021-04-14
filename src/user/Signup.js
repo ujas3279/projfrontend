@@ -4,24 +4,41 @@ import { Link } from "react-router-dom";
 import { signup } from "../auth/helper";
 
 const Signup = () => {
+
+  const strength=undefined;
+  const color=undefined;
+
   const [values, setValues] = useState({
     name: "",
     email: "",
     password: "",
+    confirm_password:"",
     error: "",
     success: false
   });
 
-  const { name, email, password, error, success } = values;
+  const { name, email, password,confirm_password, error, success } = values;
 
   const handleChange = name => event => {
+
+
     setValues({ ...values, error: false, [name]: event.target.value });
   };
 
   const onSubmit = event => {
     event.preventDefault();
     setValues({ ...values, error: false });
-    signup({ name, email, password })
+    if(password!==confirm_password)
+    {
+      setValues({ ...values, error: "password and confirm password not match", success: false });
+    }
+    else if(!new RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$").test(email))
+    {
+      setValues({ ...values, error: "email is not valid", success: false });
+    }
+    else if(new RegExp(/[0-9]/).test(password) && new RegExp(/[a-z]/).test(password) && new RegExp(/[A-Z]/).test(password) && new RegExp(/[!#@$%^&*)(+=._-]/).test(password))
+    {
+      signup({ name, email, password })
       .then(data => {
         if (data.error) {
           setValues({ ...values, error: data.error, success: false });
@@ -31,12 +48,17 @@ const Signup = () => {
             name: "",
             email: "",
             password: "",
+            confirm_password:"",
             error: "",
             success: true
           });
         }
       })
       .catch(console.log("Error in signup"));
+    }
+    else{
+      setValues({ ...values, error: "password must be contain spacial character, small and capital latter and number ", success: false });
+    }
   };
 
   const signUpForm = () => {
@@ -70,6 +92,15 @@ const Signup = () => {
                 className="form-control"
                 type="password"
                 value={password}
+              />
+            </div>
+            <div className="form-group">
+              <label className="text-light">Confirm Password</label>
+              <input
+                onChange={handleChange("confirm_password")}
+                className="form-control"
+                type="password"
+                value={confirm_password}
               />
             </div>
             <button onClick={onSubmit} className="btn btn-success btn-block">
@@ -117,7 +148,7 @@ const Signup = () => {
       {successMessage()}
       {errorMessage()}
       {signUpForm()}
-      <p className="text-white text-center">{JSON.stringify(values)}</p>
+      
     </Base>
   );
 };

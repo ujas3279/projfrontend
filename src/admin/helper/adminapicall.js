@@ -174,3 +174,52 @@ export const updateProduct = (productId, userId, token, product) => {
     })
     .catch(err => console.log(err));
 };
+
+
+
+
+// Order calls
+//get AllOrders
+export const getOrders = (userId,token) => {
+  return fetch(`${API}/order/all/${userId}`,{
+    method:"GET",
+    headers:{
+      Authorization: `Bearer ${token}`
+    }
+  }).then(response => {
+    return response.json();}
+    ).
+    catch(err => console.log(err))
+}
+
+
+//get order status
+export const getOrderStatus = (userId,token) => {
+  return fetch(`${API}/order/status/${userId}`,{
+    method:"GET",
+    headers:{
+      Authorization: `Bearer ${token}`
+    }
+  }).then(response => {
+    return response.json();}
+    ).
+    catch(err => console.log(err))
+}
+
+//update status
+export const updateStatus = (orderId,userId,token,order) => {
+  return fetch(`${API}/order/${orderId}/status/${userId}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(order)
+  })
+    .then(response => {
+      return response.json();
+    })
+    .catch(err => console.log(err));
+
+}

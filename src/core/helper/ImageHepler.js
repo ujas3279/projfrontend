@@ -11,8 +11,9 @@ const ImageHepler = ({product}) => {
             <img
                 src={imageurl}
                 alt="photo"
-                style={{ maxHeight: "100%", maxWidth: "100%" }}
+                style={{ maxHeight: "50%", maxWidth: "50%" }}
                 className="mb-3 rounded"
+
             />
         </div>
     )

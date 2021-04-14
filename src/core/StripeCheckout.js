@@ -20,7 +20,7 @@ const StripeCheckout = ({
 
   const usertoken = isAutheticated() && isAutheticated().token;
   const userId = isAutheticated() && isAutheticated().user._id;
-let famount=0;
+  let famount=0;
   const getFinalAmount = () => {
     let amount = 0;
     products.map(p => {
