@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Base from "../core/Base";
 import { Link } from "react-router-dom";
 import { signup } from "../auth/helper";
+import * as emailjs from "emailjs-com";
+require('dotenv').config();
 
 const Signup = () => {
   const [values, setValues] = useState({
@@ -18,6 +20,19 @@ const Signup = () => {
     setValues({ ...values, error: false, [name]: event.target.value });
   };
 
+  const SendEmail=  (email,name)=>{
+ 
+    emailjs.send(process.env.REACT_APP_SERVICE_ID, process.env.REACT_APP_TEMPLET_ID, {
+        to_email:email,
+        to_name:name
+    },process.env.REACT_APP_USER_ID)
+      .then((result) => {
+          console.log(result.text);
+      }, (error) => {
+          console.log(error.text);
+      })
+    };
+
   const onSubmit = event => {
     event.preventDefault();
     setValues({ ...values, error: false });
@@ -26,6 +41,7 @@ const Signup = () => {
         if (data.error) {
           setValues({ ...values, error: data.error, success: false });
         } else {
+          {SendEmail(email,name)};
           setValues({
             ...values,
             name: "",

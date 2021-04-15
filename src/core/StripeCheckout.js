@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import StripeCheckoutButton from "react-stripe-checkout";
 import { API, PUB_KEY } from "../backend";
 import { createOrder } from "./helper/OrderHelper";
-
+require('dotenv').config();
 const StripeCheckout = ({
   products,
   setReload = f => f,
@@ -68,7 +68,7 @@ let famount=0;
   const showStripeButton = () => {
     return isAutheticated() ? (
       <StripeCheckoutButton
-        stripeKey="pk_test_51IdeSDSI5XM6hZ3DrUSYCGQZBehGPfHUCqS6Gqf0cgy8qWutlYb7U8J6AJhxFo9kDMJH5n47Sgm279VAU4LgFTfj00uH3awo8R"
+        stripeKey = {process.env.REACT_APP_PUB_KEY}
         token={makePayment}
         amount={getFinalAmount() * 100}
         name="Buy Tshirts"
