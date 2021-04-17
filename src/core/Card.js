@@ -15,6 +15,8 @@ const Card = ({
   }) => {
     const [redirect, setRedirect] = useState(false);
     const [count, setCount] = useState(product.count);
+    
+    
   
     const cartTitle = product ? product.name : "A photo from pexels";
     const cartDescrption = product ? product.description : "Default description";
@@ -58,6 +60,9 @@ const Card = ({
         )
       );
     };
+
+   
+
     return (
       <div className="card text-white bg-dark border border-info ">
         <div className="card-header lead">{cartTitle}</div>
@@ -71,6 +76,8 @@ const Card = ({
           <div className="row">
             <div className="col-12">{showAddToCart(addtoCart)}</div>
             <div className="col-12">{showRemoveFromCart(removeFromCart)}</div>
+            
+            
           </div>
         </div>
       </div>

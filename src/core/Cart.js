@@ -31,6 +31,7 @@ const Cart = () => {
       </div>
     );
   };
+
   const loadCheckout = () => {
     return (
       <div>
@@ -38,6 +39,7 @@ const Cart = () => {
       </div>
     );
   };
+  
 
   return (
     <Base title="Cart Page" description="Ready to checkout">

@@ -22,9 +22,9 @@ const StripeCheckout = ({
 
   const usertoken = isAutheticated() && isAutheticated().token;
   const userId = isAutheticated() && isAutheticated().user._id;
+
   const useremail=isAutheticated() && isAutheticated().user.email;
   const username=isAutheticated() && isAutheticated().name;
-  console.log(useremail);
 let famount=0;
   const getFinalAmount = () => {
     let amount = 0;
