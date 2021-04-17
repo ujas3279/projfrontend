@@ -5,7 +5,7 @@ import Base from '../core/Base';
 
 
 
-const UserDashBoard = () => {
+const Setting = () => {
 
     const {
         user: { name, email}
@@ -14,19 +14,23 @@ const UserDashBoard = () => {
     const adminLeftSide = () => {
         return (
           <div className="card">
-            <h4 className="card-header bg-dark text-white">User Navigation</h4>
+            <h4 className="card-header bg-dark text-white">User Setting</h4>
             <ul className="list-group">
               <li className="list-group-item">
-                <Link to="/user/orders" className="nav-link text-success">
-                  Your Orders
+                <Link to="/user/dashboard" className="nav-link text-success">
+                  Main Menu
                 </Link>
               </li>
               <li className="list-group-item">
-                <Link to="/user/setting" className="nav-link text-success">
-                  Setting
+                <Link to="/" className="nav-link text-success">
+                  Change Password
                 </Link>
               </li>
-              
+              <li className="list-group-item">
+                <Link to="/" className="nav-link text-success">
+                  Change Name
+                </Link>
+              </li>
               
             </ul>
           </div>
@@ -66,4 +70,4 @@ const UserDashBoard = () => {
       );
     };
 
-export default UserDashBoard;
+export default Setting;

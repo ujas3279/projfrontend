@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import { Link } from 'react-router-dom';
 import { isAutheticated } from '../auth/helper';
 import Base from '../core/Base';
-import {getOrderStatus,updateOrderStatus, getOrders} from "./helper/adminapicall"
+import { getOrders} from "./helper/adminapicall"
 
 const ManageOrders = () => {
 
@@ -25,16 +25,7 @@ const ManageOrders = () => {
         preload();
     }, [])
 
-    const OrderStatus = orderId => {
-        getOrderStatus(user._id,token).then( data => {
-            if(data.error){
-                console.log(data.error);
-            }
-            else{
-                preload();
-            }
-        })
-    }
+    
 
     return (
         <Base title="Welcome admin" description="Manage Orders here">
@@ -49,22 +40,22 @@ const ManageOrders = () => {
           {orders.map((order, index) => {
               return(<div key={index} className="row text-center mb-2 ">
               <div className="col-4">
-                <h3 className="text-white text-left">{order._id}</h3>
+                <h3 className="text-white text-left">{order.user.name}</h3>
               </div>
               <div className="col-4">
                 <Link
                   className="btn btn-success"
-                  to={'/'}
+                  to={`/admin/order/detail/${order._id}`}
                 >
-                  <span className="">Update</span>
+                  <span className="">Order detail</span>
                 </Link>
               </div>
               <div className="col-4">
-                <button onClick={() => {
-                    getOrderStatus(order._id);
-                }} className="btn btn-danger">
-                  Status
-                </button>
+                <Link
+                className="btn btn-success"
+                to={`/admin/orderstatus/update/${order._id}`}>
+                  <span className="">Update Status</span>
+                </Link>
               </div>
               </div>
               )

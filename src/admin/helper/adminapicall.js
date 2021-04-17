@@ -81,7 +81,6 @@ export const deleteCategory = (categoryId, userId, token) => {
         }
         else{
             data.map((product,index) => {
-              console.log(product.category);
               if(product.category===null)
               {
                 deleteProduct(product._id,userId,token).then( data => {
@@ -194,12 +193,9 @@ export const getOrders = (userId,token) => {
 
 
 //get order status
-export const getOrderStatus = (userId,token) => {
-  return fetch(`${API}/order/status/${userId}`,{
+export const getOrder = (orderId) => {
+  return fetch(`${API}/order/${orderId}`,{
     method:"GET",
-    headers:{
-      Authorization: `Bearer ${token}`
-    }
   }).then(response => {
     return response.json();}
     ).
@@ -208,6 +204,7 @@ export const getOrderStatus = (userId,token) => {
 
 //update status
 export const updateStatus = (orderId,userId,token,order) => {
+  
   return fetch(`${API}/order/${orderId}/status/${userId}`, {
     method: "PUT",
     headers: {
