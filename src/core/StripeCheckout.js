@@ -3,8 +3,10 @@ import { isAutheticated } from "../auth/helper";
 import { cartEmpty, loadCart } from "./helper/CartHelper";
 import { Link } from "react-router-dom";
 import StripeCheckoutButton from "react-stripe-checkout";
-import { API, PUB_KEY } from "../backend";
+import { API } from "../backend";
 import { createOrder } from "./helper/OrderHelper";
+import * as emailjs from "emailjs-com";
+require('dotenv').config();
 
 const StripeCheckout = ({
   products,
@@ -20,7 +22,10 @@ const StripeCheckout = ({
 
   const usertoken = isAutheticated() && isAutheticated().token;
   const userId = isAutheticated() && isAutheticated().user._id;
-  let famount=0;
+
+  const useremail=isAutheticated() && isAutheticated().user.email;
+  const username=isAutheticated() && isAutheticated().name;
+let famount=0;
   const getFinalAmount = () => {
     let amount = 0;
     products.map(p => {
@@ -29,7 +34,15 @@ const StripeCheckout = ({
     famount=amount;
     return amount;
   };
-
+  const SendEmail=  (data)=>{
+ 
+    emailjs.send(process.env.REACT_APP_SERVICE_ID, process.env.REACT_APP_ORDER_TEMPLET, data,process.env.REACT_APP_USER_ID)
+      .then((result) => {
+          console.log(result.text);
+      }, (error) => {
+          console.log(error.text);
+      })
+    };
   const makePayment = token => {
     const body = {
       token,
@@ -54,11 +67,20 @@ const StripeCheckout = ({
             amount:famount,
             address:useraddress
         }
+        const maildata={
+              to_email:useremail,
+              to_name:token.card.name,
+              address:useraddress,
+              amount:famount
+              
+        }
+       
+        
         cartEmpty(()=>{
 
         })
         createOrder(userId, usertoken, orderData);
-        
+        SendEmail(maildata);
         setReload(!reload);
         console.log(response.status);
       })
@@ -68,7 +90,7 @@ const StripeCheckout = ({
   const showStripeButton = () => {
     return isAutheticated() ? (
       <StripeCheckoutButton
-        stripeKey="pk_test_51IdeSDSI5XM6hZ3DrUSYCGQZBehGPfHUCqS6Gqf0cgy8qWutlYb7U8J6AJhxFo9kDMJH5n47Sgm279VAU4LgFTfj00uH3awo8R"
+        stripeKey = {process.env.REACT_APP_PUB_KEY}
         token={makePayment}
         amount={getFinalAmount() * 100}
         name="Buy Tshirts"
