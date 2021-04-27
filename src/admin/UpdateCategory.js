@@ -10,7 +10,7 @@ const UpdateCategory = ({match}) => {
     const [name, setName] = useState("");
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
-
+    const [loading, setloading] = useState(false)
 
     const {user,token} = isAutheticated();
 
@@ -54,6 +54,7 @@ const UpdateCategory = ({match}) => {
 
     const onSubmit = (event) => {
         event.preventDefault();
+        setloading(true);
         setError("");
         setSuccess(false)
 
@@ -63,11 +64,13 @@ const UpdateCategory = ({match}) => {
             if(data.error)
             {
                     setError(error);
+                    setloading(false);
             }
             else{
                 setError("");
                 setSuccess(true);
                 setName("");
+                setloading(true);
             }
         }).catch(err=>{})
     }
@@ -94,8 +97,10 @@ const UpdateCategory = ({match}) => {
               ></Form.Control>
             </Form.Group>
 
-            <Button type='submit' onClick={onSubmit} variant='primary'>
-              Update Category
+            <Button type='submit' onClick={onSubmit} variant='primary' disabled={loading}>
+            {loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
+          {loading && <span>Updating...</span>}
+          {!loading && <span>Update Category</span>}
             </Button> 
             </Form>
         </FormContainer>

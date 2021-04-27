@@ -32,6 +32,7 @@ const Signin = () => {
           authenticate(data, () => {
             setValues({
               ...values,
+              loading:false,
               didRedirect: true
             });
           });
@@ -104,8 +105,10 @@ const Signin = () => {
           ></Form.Control>
         </Form.Group>
 
-        <Button type='submit' onClick={onSubmit} variant='primary'>
-          Sign In
+        <Button type='submit' onClick={onSubmit} variant='primary' disabled={loading}>
+        {loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
+          {loading && <span>Signing up....</span>}
+          {!loading && <span>Sign In</span>}
         </Button>
       </Form>
       <Row className="pt-2"><Col>

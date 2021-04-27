@@ -18,11 +18,12 @@ const Signup = () => {
     password: "",
     confirm_password:"",
     error: "",
+    loading:false,
     success: false,
     didRedirect: false
   });
 
-  const { name, email, password,confirm_password, error, success, didRedirect } = values;
+  const { name, email, password,confirm_password, error,loading, success, didRedirect } = values;
 
   const handleChange = name => event => {
     setValues({ ...values, error: false, [name]: event.target.value });
@@ -44,21 +45,21 @@ const Signup = () => {
 
   const onSubmit = event => {
     event.preventDefault();
-    setValues({ ...values, error: false });
+    setValues({ ...values, error: false,loading:true });
     if(password!==confirm_password)
     {
-      setValues({ ...values, error: "password and confirm password not match", success: false });
+      setValues({ ...values, error: "password and confirm password not match",loading:false, success: false });
     }
     else if(!new RegExp("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$").test(email))
     {
-      setValues({ ...values, error: "email is not valid", success: false });
+      setValues({ ...values, error: "email is not valid", loading:false,success: false });
     }
     else if(new RegExp(/[0-9]/).test(password) && new RegExp(/[a-z]/).test(password) && new RegExp(/[A-Z]/).test(password) && new RegExp(/[!#@$%^&*)(+=._-]/).test(password))
     {
       signup({ name, email, password })
       .then(data => {
         if (data.error) {
-          setValues({ ...values, error: data.error, success: false });
+          setValues({ ...values, error: data.error,loading:false ,success: false });
         } else {
           {SendEmail(email,name)};
           setValues({
@@ -68,6 +69,7 @@ const Signup = () => {
             password: "",
             confirm_password:"",
             error: "",
+            loading:false,
             success: true,
             didRedirect: false
           });
@@ -76,7 +78,7 @@ const Signup = () => {
       .catch(err=>{});
     }
     else{
-      setValues({ ...values, error: "password must be contain special character, small and capital letter and number ", success: false });
+      setValues({ ...values, error: "password must be contain special character, small and capital letter and number ", loading:false,success: false });
     }
   };
 
@@ -131,8 +133,10 @@ const Signup = () => {
           ></Form.Control>
         </Form.Group>
 
-        <Button onClick={onSubmit} type='submit' variant='primary'>
-          Register
+        <Button onClick={onSubmit} type='submit' variant='primary' disabled={loading}>
+          {loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
+          {loading && <span>Signing up....</span>}
+          {!loading && <span>Signing up</span>}
         </Button>
       </Form>
 

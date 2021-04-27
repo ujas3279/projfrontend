@@ -56,7 +56,7 @@ const AddProduct = () => {
     setValues({ ...values, error: "", loading: true });
     createaProduct(user._id, token, formData).then(data => {
       if (data.error) {
-        setValues({ ...values, error: data.error });
+        setValues({ ...values, error: data.error,loading:false });
       } else {
         setValues({
           ...values,
@@ -166,8 +166,10 @@ const AddProduct = () => {
           ></Form.File>
             </Form.Group>
 
-            <Button type='submit' onClick={onSubmit} variant='primary'>
-              Create Product
+            <Button type='submit' onClick={onSubmit} variant='primary' disabled={loading}>
+            {loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
+          {loading && <span>Creating...</span>}
+          {!loading && <span>Create Product</span>}
             </Button>
           </Form>
         

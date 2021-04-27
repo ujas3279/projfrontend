@@ -14,7 +14,7 @@ const UpdateOrderStatus = ({match}) => {
     const [success, setSuccess] = useState(false);
     const [useremail, setUseremail] = useState("");
     const [username, setUsername] = useState("");
-
+    const [loading, setloading] = useState(false);
     const allStatus=["Cancelled", "Delivered", "Shipped", "Processing"];
     const {user,token} = isAutheticated();
     const SendEmail=  (email,name)=>{
@@ -70,6 +70,7 @@ const UpdateOrderStatus = ({match}) => {
 
     const onSubmit = (event) => {
         event.preventDefault();
+        setloading(true);
         setError("");
         setSuccess(false)
         //backend request
@@ -78,12 +79,14 @@ const UpdateOrderStatus = ({match}) => {
             if(data.error)
             {
                     setError(error);
+                    setloading(false);
             }
             else{
                 SendEmail(useremail,username)
                 setError("");
                 setSuccess(true);
                 setStatus("");
+                setloading(false);
             }
         })
     }
@@ -121,8 +124,10 @@ const UpdateOrderStatus = ({match}) => {
               </Form.Control>
             </Form.Group>
 
-            <Button type='submit' onClick={onSubmit} variant='primary'>
-              Update Status
+            <Button type='submit' onClick={onSubmit} variant='primary' disabled={loading}>
+            {loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
+          {loading && <span>Updating...</span>}
+          {!loading && <span>Update Status</span>}
             </Button> 
             </Form>
         </FormContainer>

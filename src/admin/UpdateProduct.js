@@ -84,7 +84,7 @@ const UpdateProduct = ({match}) => {
     setValues({ ...values, error: "", loading: true });
     updateProduct(match.params.productId,user._id, token, formData).then(data => {
       if (data.error) {
-        setValues({ ...values, error: data.error });
+        setValues({ ...values, error: data.error,loading:false });
       } else {
         setValues({
           ...values,
@@ -195,8 +195,10 @@ const UpdateProduct = ({match}) => {
       ></Form.File>
         </Form.Group>
 
-        <Button type='submit' onClick={onSubmit} variant='primary'>
-          Update
+        <Button type='submit' onClick={onSubmit} variant='primary' disabled={loading}>
+        {loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
+          {loading && <span>Updating...</span>}
+          {!loading && <span>Update Product</span>}
         </Button>
       </Form>
     

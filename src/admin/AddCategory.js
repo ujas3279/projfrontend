@@ -10,7 +10,7 @@ const AddCategory = () => {
     const [name, setName] = useState("");
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
-
+    const [loading, setloading] = useState(false)
 
     const {user,token} = isAutheticated();
 
@@ -30,6 +30,7 @@ const AddCategory = () => {
 
     const onSubmit = (event) => {
         event.preventDefault();
+        setloading(true);
         setError("");
         setSuccess(false)
 
@@ -39,10 +40,12 @@ const AddCategory = () => {
             if(data.error)
             {
                     setError(error);
+                    setloading(false);
             }
             else{
                 setError("");
                 setSuccess(true);
+                setloading(false);
                 setName("");
             }
         }).catch(err=>{})
@@ -76,8 +79,10 @@ const AddCategory = () => {
               ></Form.Control>
             </Form.Group>
 
-            <Button type='submit' onClick={onSubmit} variant='primary'>
-              Create Category
+            <Button type='submit' onClick={onSubmit} variant='primary' disabled={loading}>
+            {loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
+          {loading && <span>Add Category</span>}
+          {!loading && <span>Adding...</span>}
             </Button> 
             </Form>
         </FormContainer>
