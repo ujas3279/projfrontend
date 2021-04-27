@@ -18,30 +18,30 @@ const ChangePassword = () => {
     confirm_password:"",
     error: "",
     success: false,
+    loading:false,
     didRedirect: false,
     formData: ""
   });
 
-  const {password,confirm_password, error, success, didRedirect,formData } = values;
+  const {password,confirm_password, error,loading, success, didRedirect,formData } = values;
 
   const handleChange = name => event => {
     setValues({ ...values, error: false, [name]: event.target.value });
   };
   const onSubmit = event => {
     event.preventDefault();
-    setValues({ ...values, error: false });
+    setValues({ ...values, error: false,loading:true });
     if(password!==confirm_password)
     {
-      setValues({ ...values, error: "password and confirm password not match", success: false });
+      setValues({ ...values, error: "password and confirm password not match", success: false ,loading:false});
     }
     
     else if(new RegExp(/[0-9]/).test(password) && new RegExp(/[a-z]/).test(password) && new RegExp(/[A-Z]/).test(password) && new RegExp(/[!#@$%^&*)(+=._-]/).test(password))
     {
       changePassword(user._id,token,{password})
       .then(data => {
-          console.log(data)
-        if (false) {
-          setValues({ ...values, error: data.error, success: false });
+        if (data.error) {
+          setValues({ ...values, error: data.error, success: false,loading:false });
         } else {
           setValues({
             ...values,
@@ -49,6 +49,7 @@ const ChangePassword = () => {
             confirm_password:"",
             error: "",
             success: true,
+            loading:false,
             didRedirect: false
           });
         }
@@ -56,7 +57,7 @@ const ChangePassword = () => {
       .catch(console.log("Error in change password"));
     }
     else{
-      setValues({ ...values, error: "password must be contain spacial character, small and capital latter and number ", success: false });
+      setValues({ ...values, error: "password must be contain spacial character, small and capital latter and number ", success: false ,loading:false});
     }
   };
 
@@ -91,8 +92,10 @@ const ChangePassword = () => {
           ></Form.Control>
         </Form.Group>
 
-        <Button onClick={onSubmit} type='submit' variant='primary'>
-          Change
+        <Button onClick={onSubmit} type='submit' variant='primary' disabled={loading}>
+        {loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
+          {loading && <span>Changing....</span>}
+          {!loading && <span>Change</span>}
         </Button>
       </Form>
 

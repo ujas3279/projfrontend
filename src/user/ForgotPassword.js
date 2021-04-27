@@ -9,10 +9,11 @@ import { getPasswordLink } from "./helper/userapicalls";
     const [values, setValues] = useState({
         email: "",
         error: "",
+        loading:false,
         success: false,
       });
 
-      const { email, error,success} = values;
+      const { email,loading, error,success} = values;
 
       const handleChange = name => event => {
         setValues({ ...values, error: false, [name]: event.target.value });
@@ -20,13 +21,13 @@ import { getPasswordLink } from "./helper/userapicalls";
 
       const onSubmit = event => {
         event.preventDefault();
-        setValues({ ...values, error: false });
+        setValues({ ...values, error: false ,loading:true});
         getPasswordLink({email})
           .then(data => {
             if (data.error) {
-              setValues({ ...values, error: data.error,success:false});
+              setValues({ ...values, error: data.error,success:false,loading:false});
             } else {
-              setValues({...values, email:"" ,success:true,error:""})
+              setValues({...values, email:"" ,success:true,error:"",loading:false})
               
             }
           })
@@ -81,8 +82,10 @@ import { getPasswordLink } from "./helper/userapicalls";
     
             
     
-            <Button type='submit' onClick={onSubmit} variant='primary'>
-              Forgot Password
+            <Button type='submit' onClick={onSubmit} variant='primary' disabled={loading}>
+            {loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
+          {loading && <span>Sending....</span>}
+          {!loading && <span>Forgot Password</span>}
             </Button>
           </Form>
     
