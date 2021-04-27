@@ -1,16 +1,14 @@
 import React,{useState,useEffect} from "react";
-import "../styles.css";
-import { API } from "../backend";
-import Base from "./Base";
-import Card from "./Card";
+import Pcard from "./Card";
 import { getProducts } from "./helper/coreapicalls";
-
+import { Row, Col,Form } from 'react-bootstrap'
 
 export default function Home() {
 
   const [products, setProducts] = useState([])
   const [error, setError] = useState(false)
-
+  const [search, setSearch] = useState("");
+  const [reload, setReload] = useState(false);
   const loadAllProduct = () => {
     getProducts().then(data => {
       if(data.error){
@@ -19,28 +17,38 @@ export default function Home() {
       else{
         setProducts(data);
       }
-    })
+    }).catch(err=>{})
   }
+  const handleChange = (event) => {
+    setSearch(event.target.value.toLowerCase());
+    setReload(!reload);
+};
 
   useEffect(() => {
     loadAllProduct()
-  }, [])
+  }, [reload])
 
   return (
-    <Base title="Home Page" description="Welcome to the Tshirt Store">
-      <div className="row text-center">
-        <h1 className="text-white"> All products</h1>
-        <div className="row">
-          {products.map((product,index) => {
-            return(
-              <div key={index} className="col-4 mb-4">
-                <Card product={product} />
-              </div>
-            )
-          })}
-
-        </div>
-      </div>
-    </Base>
+    <>
+    
+      
+      <Form.Group controlId='search' className="search">
+              <Form.Control 
+                type='name'
+                placeholder='&#xF002;   Search Products'
+                value={search}
+                onChange={handleChange}
+                className='searchbox'
+              ></Form.Control>
+      </Form.Group>
+      {(search=="") && (<h1>Latest Products</h1>)}
+      <Row>
+          {products.map((product, index) => (
+            product.name.toLowerCase().match(`${search}`) && (<Col key={index} sm={12} md={6} lg={4} xl={3}>
+             <Pcard product={product} />
+            </Col>)
+          ))}
+      </Row>
+    </>
   );
 }

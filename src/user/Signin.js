@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import Base from "../core/Base";
 import { Link, Redirect } from "react-router-dom";
+import FormContainer from './helper/FormContainer'
+import { Form, Button, Row, Col } from 'react-bootstrap'
 
 import { signin, authenticate, isAutheticated } from "../auth/helper";
 
@@ -36,12 +37,13 @@ const Signin = () => {
           });
         }
       })
-      .catch(console.log("signin request failed"));
+    .catch(err=>{});
   };
 
   const performRedirect = () => {
     if (didRedirect) {
       if (user && user.role === 1) {
+        console.log("signin")
         return <Redirect to="/admin/dashboard"/>
       } else {
         return <Redirect to="/user/dashboard"/>
@@ -79,45 +81,60 @@ const Signin = () => {
 
   const signInForm = () => {
     return (
-      <div className="row">
-        <div className="col-md-6 offset-sm-3 text-left">
-          <form>
-            <div className="form-group">
-              <label className="text-light">Email</label>
-              <input
-                onChange={handleChange("email")}
-                value={email}
-                className="form-control"
-                type="email"
-              />
-            </div>
+      <FormContainer>
+      <h1>Sign In</h1>
+      <Form>
+        <Form.Group controlId='email'>
+          <Form.Label>Email Address</Form.Label>
+          <Form.Control
+            type='email'
+            placeholder='Enter email'
+            value={email}
+            onChange={handleChange("email")}
+          ></Form.Control>
+        </Form.Group>
 
-            <div className="form-group">
-              <label className="text-light">Password</label>
-              <input
-                onChange={handleChange("password")}
-                value={password}
-                className="form-control"
-                type="password"
-              />
-            </div>
-            <button onClick={onSubmit} className="btn btn-success btn-block">
-              Submit
-            </button>
-          </form>
-        </div>
-      </div>
+        <Form.Group controlId='password'>
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type='password'
+            placeholder='Enter password'
+            value={password}
+            onChange={handleChange("password")}
+          ></Form.Control>
+        </Form.Group>
+
+        <Button type='submit' onClick={onSubmit} variant='primary'>
+          Sign In
+        </Button>
+      </Form>
+      <Row className="pt-2"><Col>
+          <Link to="/forgotpassword">
+            Forgot password?
+          </Link>
+          </Col>
+        </Row>
+      <Row className='py-3'>
+        <Col>
+          New Customer?{' '}
+          <Link to="/signup">
+            Signup
+          </Link>
+        </Col>
+        
+      </Row>
+    </FormContainer>
     );
   };
 
   return (
-    <Base title="Sign In page" description="A page for user to sign in!">
+    <>
       {loadingMessage()}
       {errorMessage()}
       {signInForm()}
       {performRedirect()}
       
-    </Base>
+    </>
   );
 };
 

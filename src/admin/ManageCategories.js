@@ -1,13 +1,11 @@
 import React,{useState,useEffect} from 'react'
 import { Link } from 'react-router-dom';
 import { isAutheticated } from '../auth/helper';
-import Base from '../core/Base';
 import {deleteCategory, getCategories} from "./helper/adminapicall"
+import { Table, Button } from 'react-bootstrap';
 
 const ManageCategories = () => {
-
     const [Categories, setCategories] = useState([]);
-
     const {user,token} = isAutheticated();
 
     const preload = () => {
@@ -18,7 +16,7 @@ const ManageCategories = () => {
             else{
                 setCategories(data);
             }
-        })
+        }).catch(err=>{})
     }
 
     useEffect(() => {
@@ -33,45 +31,53 @@ const ManageCategories = () => {
             else{
                 preload();
             }
-        })
+        }).catch(err=>{})
     }
 
     return (
-        <Base title="Welcome admin" description="Manage Categories here">
-      <h2 className="mb-4">All Categories:</h2>
-      <Link className="btn btn-info" to={`/admin/dashboard`}>
-        <span className="">Admin Home</span>
+        <>
+      <h2 className="mb-4 text-center">Categories</h2>
+      <Link className='btn btn-outline-dark my-3' to={`/admin/dashboard`}>
+        go back
       </Link>
-      <div className="row">
-        <div className="col-12">
-          <h2 className="text-center text-white my-3">Total Categories</h2>
 
-          {Categories.map((category, index) => {
-              return(<div key={index} className="row text-center mb-2 ">
-              <div className="col-4">
-                <h3 className="text-white text-left">{category.name}</h3>
-              </div>
-              <div className="col-4">
-                <Link
-                  className="btn btn-success"
-                  to={`/admin/category/update/${category._id}`}
-                >
-                  <span className="">Update</span>
+      {Categories.length===0 ? (
+        <h2 className="text-center">NO CATEGORY FOUND</h2>
+      ):(<Table striped bordered responsive className='table-sm'>
+            <thead>
+              <tr>
+                <th className="text-center">NAME</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+            {Categories.map((category, index) => {
+              return(
+                <tr key={index}>
+                  <td className="text-center py-4">{category.name}</td>
+                  <td className="text-center">
+                  <Link
+                    to={`/admin/category/update/${category._id}`}
+                  >
+                  <Button variant='light' className="btn-sm"><i className='fas fa-edit'></i></Button>
                 </Link>
-              </div>
-              <div className="col-4">
-                <button onClick={() => {
+                  </td>
+                <td className="text-center">
+                <Button onClick={() => {
                     deleteThisCategory(category._id);
-                }} className="btn btn-danger">
-                  Delete
-                </button>
-              </div>
-              </div>
+                }} variant="danger" className="btn-sm">
+                  <i className='fas fa-trash'></i>
+                </Button>
+                  </td>
+                  </tr>
+          
               )
           })}
-        </div>
-      </div>
-    </Base>
+
+          </tbody>
+          </Table>)}
+    </>
     )
 }
 

@@ -1,16 +1,14 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { isAutheticated } from '../auth/helper';
-import Base from '../core/Base';
 
 
 
 const Setting = () => {
 
     const {
-        user: { name, email}
+        user: {_id, name, email}
       } = isAutheticated();
-
     const adminLeftSide = () => {
         return (
           <div className="card">
@@ -22,16 +20,10 @@ const Setting = () => {
                 </Link>
               </li>
               <li className="list-group-item">
-                <Link to="/" className="nav-link text-success">
+                <Link to={`/user/setting/changepassword/${_id}`} className="nav-link text-success">
                   Change Password
                 </Link>
               </li>
-              <li className="list-group-item">
-                <Link to="/" className="nav-link text-success">
-                  Change Name
-                </Link>
-              </li>
-              
             </ul>
           </div>
         );
@@ -57,16 +49,12 @@ const Setting = () => {
         );
       };
       return (
-        <Base
-          title="Welcome to User area"
-          description=""
-          className="container bg-success p-4"
-        >
+        <>
           <div className="row">
             <div className="col-3">{adminLeftSide()}</div>
             <div className="col-9">{adminRightSide()}</div>
           </div>
-        </Base>
+        </>
       );
     };
 

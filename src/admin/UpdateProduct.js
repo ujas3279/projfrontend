@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Base from "../core/Base";
 import { Link } from "react-router-dom";
 import { getCategories,getProduct, updateProduct } from "./helper/adminapicall";
 import { isAutheticated } from "../auth/helper/index";
+import { Form, Button } from 'react-bootstrap'
+import FormContainer from '../user/helper/FormContainer'
 
 const UpdateProduct = ({match}) => {
   const { user, token } = isAutheticated();
@@ -56,7 +57,7 @@ const UpdateProduct = ({match}) => {
          });
          
       }
-    });
+    }).catch(err=>{})
   };
 
   const preloadCategories = () => {
@@ -110,108 +111,106 @@ const UpdateProduct = ({match}) => {
       className="alert alert-success mt-3"
       style={{ display: createdProduct ? "" : "none" }}
     >
-      <h4>{createdProduct} updated successfully</h4>
+      <h5>{createdProduct} updated successfully</h5>
     </div>
   );
 
   const warningMessage = () => {
     if(error){
-        return <h4 className="text-success">Failed to create category</h4>
+        return <h5 className="alert alert-danger mt-3">Failed to create category</h5>
     }
   };
   const createProductForm = () => (
-    <form>
-      <span>Post photo</span>
-      <div className="form-group">
-        <label className="btn btn-block btn-success">
-          <input
-            onChange={handleChange("photo")}
-            type="file"
-            name="photo"
-            accept="image"
-            placeholder="choose a file"
-          />
-        </label>
-      </div>
-      <div className="form-group">
-        <input
-          onChange={handleChange("name")}
-          name="photo"
-          className="form-control"
-          placeholder="Name"
-          value={name}
-        />
-      </div>
-      <div className="form-group">
-        <textarea
-          onChange={handleChange("description")}
-          name="photo"
-          className="form-control"
-          placeholder="Description"
-          value={description}
-        />
-      </div>
-      <div className="form-group">
-        <input
-          onChange={handleChange("price")}
-          type="number"
-          className="form-control"
-          placeholder="Price"
-          value={price}
-        />
-      </div>
-      <div className="form-group">
-        <select
-          onChange={handleChange("category")}
-          className="form-control"
-          placeholder="Category"
-        >
-          <option>Select</option>
-          {categories &&
-            categories.map((cate, index) => (
-              <option key={index} value={cate._id}>
-                {cate.name}
-              </option>
-            ))}
-        </select>
-      </div>
-      <div className="form-group">
-        <input
-          onChange={handleChange("stock")}
-          type="number"
-          className="form-control"
-          placeholder="Stock"
-          value={stock}
-        />
-      </div>
+    
+    <FormContainer>
+    <h1>Update Product</h1>
+    
+      <Form>
+        
+      {successMessage()}
+        {warningMessage()}
+        <Form.Group controlId='name'>
+          <Form.Label>Name</Form.Label>
+          <Form.Control
+            type='name'
+            placeholder='Name'
+            value={name}
+            onChange={handleChange("name")}
+          ></Form.Control>
+        </Form.Group>
 
-      <button
-        type="submit"
-        onClick={onSubmit}
-        className="btn btn-outline-success mb-3"
-      >
-        Update Product
-      </button>
-    </form>
+        <Form.Group controlId='description'>
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            type='name'
+            placeholder='Description'
+            value={description}
+            onChange={handleChange("description")}
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group controlId='price'>
+          <Form.Label>Price</Form.Label>
+          <Form.Control
+            type='number'
+            placeholder='Enter price'
+            value={price}
+            onChange={handleChange("price")}
+          ></Form.Control>
+        </Form.Group>
+
+        
+
+        <Form.Group controlId='category'>
+          <Form.Label>Category</Form.Label>
+          <Form.Control as="select" onChange={handleChange("category")}>
+            <option>Select</option>
+            {categories &&
+              categories.map((cate, index) => (
+                <option key={index} value={cate._id}>
+                  {cate.name}
+                </option>
+            ))}
+          </Form.Control>
+        </Form.Group>
+
+        <Form.Group controlId='stock'>
+          <Form.Label>Stock</Form.Label>
+          <Form.Control
+            type='number'
+            placeholder='Stock'
+            value={stock}
+            onChange={handleChange("stock")}
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group controlId='photo'>
+          <Form.Label>Image</Form.Label>
+          <Form.File
+        onChange={handleChange("photo")}
+        type="file"
+        name="photo"
+        accept="image"
+        
+      ></Form.File>
+        </Form.Group>
+
+        <Button type='submit' onClick={onSubmit} variant='primary'>
+          Update
+        </Button>
+      </Form>
+    
+  </FormContainer>
   );
 
   return (
-    <Base
-      title="Add a product here!"
-      description="Welcome to product creation section"
-      className="container bg-info p-4"
-    >
-      <Link to="/admin/dashboard" className="btn btn-md btn-dark mb-3">
-        Admin Home
+    <>
+      <Link to='/admin/products' className='btn btn-outline-dark my-3'>
+        Go Back
       </Link>
-      <div className="row bg-dark text-white rounded">
-        <div className="col-md-8 offset-md-2">
-          {successMessage()}
-          {warningMessage()}
           {createProductForm()}
-        </div>
-      </div>
-    </Base>
+       
+    </>
   );
 };
 

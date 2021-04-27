@@ -1,13 +1,11 @@
 import React,{useState,useEffect} from 'react'
 import { Link } from 'react-router-dom';
 import { isAutheticated } from '../auth/helper';
-import Base from '../core/Base';
 import {deleteProduct, getProducts} from "./helper/adminapicall"
-
+import {  Col, Table, Button } from 'react-bootstrap';
+import ImageHepler from '../core/helper/ImageHepler';
 const ManageProducts = () => {
-
     const [products, setProducts] = useState([]);
-
     const {user,token} = isAutheticated();
 
     const preload = () => {
@@ -18,7 +16,7 @@ const ManageProducts = () => {
             else{
                 setProducts(data);
             }
-        })
+        }).catch(err=>{})
     }
 
     useEffect(() => {
@@ -33,45 +31,54 @@ const ManageProducts = () => {
             else{
                 preload();
             }
-        })
+        }).catch(err=>{})
     }
 
     return (
-        <Base title="Welcome admin" description="Manage products here">
-      <h2 className="mb-4">All products:</h2>
-      <Link className="btn btn-info" to={`/admin/dashboard`}>
-        <span className="">Admin Home</span>
+        <>
+      <h2 className="mb-4 text-center">Products</h2>
+      <Link className='btn btn-outline-dark my-3' to={`/admin/dashboard`}>
+        go back
       </Link>
-      <div className="row">
-        <div className="col-12">
-          <h2 className="text-center text-white my-3">Total products</h2>
-
+      
+      {products.length===0 ? (
+        <h2 className="text-center">NO PRODUCTS FOUND</h2>
+      ):(<Table striped bordered responsive className='table-sm'>
+            <thead>
+              <tr>
+                <th className="text-centre">PHOTO</th>
+                <th className="text-center">NAME</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
           {products.map((product, index) => {
-              return(<div key={index} className="row text-center mb-2 ">
-              <div className="col-4">
-                <h3 className="text-white text-left">{product.name}</h3>
-              </div>
-              <div className="col-4">
-                <Link
-                  className="btn btn-success"
-                  to={`/admin/product/update/${product._id}`}
-                >
-                  <span className="">Update</span>
+              return(
+                <tr key={index}>
+                  <td><Col md={2}><ImageHepler product={product} /></Col></td>
+                  <td className="text-center py-4">{product.name}</td>
+                  <td className="text-center">
+                  <Link
+                    to={`/admin/product/update/${product._id}`}
+                  >
+                  <Button variant='light' className="btn-sm"><i className='fas fa-edit'></i></Button>
                 </Link>
-              </div>
-              <div className="col-4">
-                <button onClick={() => {
+                  </td>
+                <td className="text-center">
+                <Button onClick={() => {
                     deleteThisProduct(product._id);
-                }} className="btn btn-danger">
-                  Delete
-                </button>
-              </div>
-              </div>
+                }} variant="danger" className="btn-sm">
+                  <i className='fas fa-trash'></i>
+                </Button>
+                  </td>
+                  </tr>
               )
           })}
-        </div>
-      </div>
-    </Base>
+
+          </tbody>
+          </Table>)}
+    </>
     )
 }
 

@@ -1,9 +1,9 @@
 import React, {useState} from 'react'
 import { Link } from 'react-router-dom';
 import { isAutheticated } from '../auth/helper';
-import Base from '../core/Base';
+import FormContainer from '../user/helper/FormContainer';
 import { createCategory } from './helper/adminapicall';
-
+import { Form, Button } from 'react-bootstrap'
 
 const AddCategory = () => {
 
@@ -15,15 +15,15 @@ const AddCategory = () => {
     const {user,token} = isAutheticated();
 
     const goBack= () => (
-        <div className="mt-5">
-            <Link className="btn btn-sm btn-info mb-3" to="/admin/dashboard">
-                Admin Home
+        <div>
+            <Link className='btn btn-outline-dark my-3' to="/admin/dashboard">
+                go back
             </Link>
 
         </div>
     )
     
-    const handleChage = (event) => {
+    const handleChange = (event) => {
         setError("");
         setName(event.target.value);
     };
@@ -45,57 +45,49 @@ const AddCategory = () => {
                 setSuccess(true);
                 setName("");
             }
-        })
+        }).catch(err=>{})
     }
 
     const successMessage = () => {
         if(success){
-            return <h4 className="text-success">Category created successfuly</h4>
+            return <h5 className="alert alert-success mt-3">Category created successfully</h5>
         }
     };
     
     const warningMessage = () => {
         if(error){
-            return <h4 className="text-success">Failed to create category</h4>
+            return <h5 className="alert alert-danger mt-3">Failed to create category</h5>
         }
     };
 
     const myCatogoryForm = () => (
-        <form>
-            <div className="form-group">
-                <p className="lead"> Enter the category</p>
-                <input 
-                type="text"
-                className="form-control my-3"
-                onChange={handleChage}
+        <FormContainer>
+            <h1>Create Category</h1>
+            <Form>
+            {successMessage()}
+            {warningMessage()}
+            <Form.Group controlId='name'>
+              <Form.Label>Name</Form.Label>
+              <Form.Control
+                type='name'
+                placeholder='Name'
                 value={name}
-                autoFocus
-                required
-                placeholder="For example summer"/>
+                onChange={handleChange}
+              ></Form.Control>
+            </Form.Group>
 
-                <button onClick={onSubmit} className="btn btn-outline-info">
-                    Create Category
-                </button>
-
-            </div>
-        </form>
+            <Button type='submit' onClick={onSubmit} variant='primary'>
+              Create Category
+            </Button> 
+            </Form>
+        </FormContainer>
     )
 
     return (
-        <Base title="Create Category here" 
-        description="Add new Category" 
-        className="container bg-info p-4">
-
-            <div className="row bg-white rounded">
-                <div className="col-md-8 offset-md-2">
-                    {myCatogoryForm()}
-                    {goBack()}
-                    {successMessage()}
-                    {warningMessage()}
-                </div>
-            </div>
-
-        </Base>
+        <>
+            {goBack()}   
+            {myCatogoryForm()}
+        </>
     )
 }
 

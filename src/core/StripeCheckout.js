@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { isAutheticated } from "../auth/helper";
 import { cartEmpty, loadCart } from "./helper/CartHelper";
+import { ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
 import { Link } from "react-router-dom";
 import StripeCheckoutButton from "react-stripe-checkout";
 import { API } from "../backend";
 import { createOrder } from "./helper/OrderHelper";
 import * as emailjs from "emailjs-com";
 require('dotenv').config();
+
 
 const StripeCheckout = ({
   products,
@@ -29,7 +31,7 @@ let famount=0;
   const getFinalAmount = () => {
     let amount = 0;
     products.map(p => {
-      amount = amount + p.price;
+      amount = amount + (p.price*p.count);
     });
     famount=amount;
     return amount;
@@ -57,10 +59,7 @@ let famount=0;
       body: JSON.stringify(body)
     })
       .then(response => {
-        console.log(response);
-        console.log(token.card.address_line1);
         let useraddress=token.card.name +","+token.card.address_line1+","+token.card.address_city+","+token.card.address_zip+","+token.card.address_country;
-        console.log(useraddress);
         const orderData={
             products:products,
             transaction_id:token.card.id,
@@ -73,16 +72,12 @@ let famount=0;
               address:useraddress,
               amount:famount
               
-        }
-       
-        
-        cartEmpty(()=>{
-
+        }  
+        cartEmpty(()=>{    
         })
+        setReload(!reload);
         createOrder(userId, usertoken, orderData);
         SendEmail(maildata);
-        setReload(!reload);
-        console.log(response.status);
       })
       .catch(error => console.log(error));
   };
@@ -93,11 +88,13 @@ let famount=0;
         stripeKey = {process.env.REACT_APP_PUB_KEY}
         token={makePayment}
         amount={getFinalAmount() * 100}
-        name="Buy Tshirts"
+        name="HandCrafts"
         currency="inr"
         shippingAddress
       >
-        <button className="btn btn-success">Process To Checkout</button>
+        <Button type='button'
+                className='btn-block'
+                disabled={products.length === 0}>Process To Checkout</Button>
       </StripeCheckoutButton>
     ) : (
       <Link to="/signin">
@@ -108,8 +105,20 @@ let famount=0;
 
   return (
     <div>
-      <h3 className="text-white">Total Amount <i class="fa fa-inr"></i> {getFinalAmount()}</h3>
-      {showStripeButton()}
+      <Card>
+          <ListGroup variant='flush'>
+            <ListGroup.Item>
+              <h2>
+                Subtotal 
+              </h2>
+              <i class="fa fa-inr"></i>
+              {getFinalAmount()}
+            </ListGroup.Item>
+            <ListGroup.Item>
+            {showStripeButton()}
+            </ListGroup.Item>
+          </ListGroup>
+        </Card>
     </div>
   );
 };

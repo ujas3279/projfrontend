@@ -1,15 +1,16 @@
 import React,{useState,useEffect} from 'react'
-import Base from '../core/Base';
 import { getOrder } from './helper/adminapicall';
-
-import Card from '../core/Card';
-
+import { Link } from 'react-router-dom';
+import ImageHepler from '../core/helper/ImageHepler';
+import { Row, Col, ListGroup, Card } from 'react-bootstrap'
 
 
 const OrderDetail = ({match}) => {
 
     const [values, setValues] = useState({
-        User_name: "",
+        id: "",
+        name: "",
+        email: "",
         status: "",
         amount: "",
         address: "",
@@ -20,7 +21,9 @@ const OrderDetail = ({match}) => {
       });
     
       const {
-        User_name,
+        id,
+        name,
+        email,
         status,
         amount,
         address,
@@ -32,9 +35,6 @@ const OrderDetail = ({match}) => {
     
     const preload = (orderId) => {
         getOrder(orderId).then(data=>{
-            //console.log(data[0]);
-            
-
             if(data.error)
             {
                 setValues({ ...values, error: data.error });
@@ -44,7 +44,9 @@ const OrderDetail = ({match}) => {
               const order=data[0];
                 setValues({
                     ...values,
-                    User_name : order.user.name,
+                    id: order._id,
+                    name : order.user.name,
+                    email: order.user.email,
                     status : order.status,
                     amount: order.amount,
                     address: order.address,
@@ -52,7 +54,7 @@ const OrderDetail = ({match}) => {
                     products: order.products
                 })
             }
-        })
+        }).catch(err=>{})
     }
 
     useEffect(() => {
@@ -61,25 +63,82 @@ const OrderDetail = ({match}) => {
 
 
     return (
-        <Base title="Order detail" description="">
-            <div className=" mr-5 col-12" ><span className="color-black">Name of user:</span> {User_name}</div>
-            <div className=" mr-5 col-12" ><span className="color-black">Order Status:  </span> {status}</div>
-            <div className=" mr-5 col-12" ><span className="color-black">Order amount:</span> {amount}</div>
-            <div className=" mr-5 col-12" ><span className="color-black">Order address:</span> {address}</div>
-            <div className=" mr-5 col-12" ><span className="color-black">Transaction:</span> {transaction_id}</div>
-            <div className=" mr-5 col-12" ><span className="color-black">Products:</span> </div>
-            <div className="row">
-          {products.map((product,index) => {
-            return(
-              <div key={index}  className="col-4 mb-4">
-                <Card product={product} addtoCart={false} />
-              </div>
-            )
-          })}
+        <>
 
-        </div>
+        <h1 className="text-center">Order {id}</h1>
+        
+        <Row>
+        <Col md={8}>
+          <ListGroup variant='flush'>
+            <ListGroup.Item>
+              <h2>Shipping</h2>
+              <p>
+                <strong>Name: </strong> {name}
+              </p>
+              <p>
+                <strong>Email: </strong>{' '}{email}
+              </p>
+              <p>
+                <strong>Address:</strong>
+                {' '}{address}
+              </p>
+              <p>
+                <strong>Status:</strong> {status}
+              </p>
+            </ListGroup.Item>
 
-        </Base>
+            <ListGroup.Item>
+              <h2>Order Items</h2>
+              
+                <ListGroup variant='flush'>
+                  {products.map((product, index) => (
+                    <ListGroup.Item key={index}>
+                      <Row>
+                        <Col md={2}>
+                          <ImageHepler product={product} />
+                        </Col>
+                        <Col>
+                          <Link to={`/product/${product._id}`}>
+                            {product.name}
+                          </Link>
+                        </Col>
+                        <Col>
+                        <i class="fa fa-inr"></i>{product.price}
+                        </Col>
+                        <Col>
+                          Quantity : {product.count}
+                        </Col>
+                      </Row>
+                    </ListGroup.Item>
+                  ))}
+                </ListGroup>
+              
+            </ListGroup.Item>
+          </ListGroup>
+        </Col>
+        <Col md={4}>
+          <Card>
+            <ListGroup variant='flush'>
+              <ListGroup.Item>
+                <h2>Order Summary</h2>
+              </ListGroup.Item>             
+      
+              <ListGroup.Item>
+                <Row>
+                  <Col>Total</Col>
+                  <Col><i class="fa fa-inr"></i>{amount}</Col>
+                </Row>
+              </ListGroup.Item>
+              
+            </ListGroup>
+          </Card>
+        </Col>
+      </Row>
+      <Link className='btn btn-outline-dark my-3' to={`/admin/orders`}>
+        go back
+      </Link>
+
+        </>
     )
 }
 

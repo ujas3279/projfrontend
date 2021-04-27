@@ -1,5 +1,7 @@
 import React, {Fragment} from "react";
-import { Link, withRouter } from "react-router-dom";
+import { Navbar, Nav, Container } from 'react-bootstrap'
+import { LinkContainer } from 'react-router-bootstrap'
+import {  withRouter } from "react-router-dom";
 import { signout, isAutheticated } from "../auth/helper/index";
 
 
@@ -12,82 +14,73 @@ const currentTab = (history, path) => {
 };
 
 const Menu = ({ history }) => (
-  <div>
-    <ul className="nav nav-tabs bg-dark">
-      <li className="nav-item">
-        <Link style={currentTab(history, "/")} className="nav-link" to="/">
-          Home
-        </Link>
-      </li>
-      <li className="nav-item">
-        <Link
-          style={currentTab(history, "/cart")}
-          className="nav-link"
-          to="/cart"
-        >
-          Cart
-        </Link>
-      </li>
-      {isAutheticated() && isAutheticated().user.role ===0 && (
-        <li className="nav-item">
-        <Link
-          style={currentTab(history, "/user/dashboard")}
-          className="nav-link"
-          to="/user/dashboard"
-        >
-          U. Dashboard
-        </Link>
-      </li>
-      )}
-      {isAutheticated() && isAutheticated().user.role===1 && (
-        <li className="nav-item">
-        <Link
-          style={currentTab(history, "/admin/dashboard")}
-          className="nav-link"
-          to="/admin/dashboard"
-        >
-          A. Dashboard
-        </Link>
-      </li>
-      )}
-     {!isAutheticated() && (
-        <Fragment>
-        <li className="nav-item">
-          <Link
-            style={currentTab(history, "/signup")}
-            className="nav-link"
-            to="/signup"
-          >
-            Signup
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link
-            style={currentTab(history, "/signin")}
-            className="nav-link"
-            to="/signin"
-          >
-            Sign In
-          </Link>
-        </li>
-        </Fragment>
-     ) }
-      {isAutheticated() && (
-        <li className="nav-item">
-          <span
-          className="nav-link text-warning"
-          onClick={() => {
-            signout(() => {
-              history.push("/")
-            })
-          }}
-          >
-            Signout
-          </span>
-        </li>
-      )}
-    </ul>
-  </div>
+  <header>
+      <Navbar className="py-2" bg='dark' variant='dark' expand='lg' collapseOnSelect>
+        <Container>
+          <LinkContainer style={currentTab(history, "/")} to='/'>
+            <Navbar.Brand>HandCrafts.com</Navbar.Brand>
+          </LinkContainer>
+          <Navbar.Toggle aria-controls='basic-navbar-nav' />
+          <Navbar.Collapse id='basic-navbar-nav'>
+            
+            <Nav className='ml-auto'>
+              <LinkContainer style={currentTab(history, "/cart")} to='/cart'>
+                <Nav.Link>
+                  <i className='fas fa-shopping-cart'></i> Cart
+                </Nav.Link>
+              </LinkContainer>
+
+              {isAutheticated() && isAutheticated().user.role ===0 && (
+                <LinkContainer style={currentTab(history, "/user/dashboard")}  to='/user/dashboard'>
+                  <Nav.Link>
+                    Dashboard
+                  </Nav.Link>
+                </LinkContainer>
+              )}
+
+              {isAutheticated() && isAutheticated().user.role===1 && (
+                <LinkContainer style={currentTab(history, "/admin/dashboard")}  to='/admin/dashboard'>
+                  <Nav.Link>
+                    Dashboard
+                  </Nav.Link>
+                </LinkContainer>
+              )}
+
+              {!isAutheticated() && (
+                <Fragment>
+                  <LinkContainer style={currentTab(history, "/signup")}  to='/signup'>
+                    <Nav.Link>
+                      Signup
+                    </Nav.Link>
+                  </LinkContainer>
+                  <LinkContainer style={currentTab(history, "/signin")}  to='/signin'>
+                    <Nav.Link>
+                      Signin
+                    </Nav.Link>
+                  </LinkContainer>
+                  
+                </Fragment>
+              )}
+              {isAutheticated() && (
+
+                <LinkContainer to="/" onClick={() => {
+                  signout(() => {
+                    history.push("/")
+                  })
+                }}>
+                  <Nav.Link>
+                    Signout
+                  </Nav.Link>
+                </LinkContainer>
+              )}
+
+            </Nav>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+    </header>
+  
 );
 
 export default withRouter(Menu);
+

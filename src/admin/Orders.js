@@ -1,8 +1,8 @@
 import React,{useState,useEffect} from 'react'
 import { Link } from 'react-router-dom';
 import { isAutheticated } from '../auth/helper';
-import Base from '../core/Base';
 import { getOrders} from "./helper/adminapicall"
+import {  Table, Button } from 'react-bootstrap';
 
 const ManageOrders = () => {
 
@@ -18,7 +18,7 @@ const ManageOrders = () => {
             else{
                 setOrders(data);
             }
-        })
+        }).catch(err=>{})
     }
 
     useEffect(() => {
@@ -28,41 +28,49 @@ const ManageOrders = () => {
     
 
     return (
-        <Base title="Welcome admin" description="Manage Orders here">
-      <h2 className="mb-4">All Orders:</h2>
-      <Link className="btn btn-info" to={`/admin/dashboard`}>
-        <span className="">Admin Home</span>
+        <>
+      <h2 className="mb-4 text-center">Orders</h2>
+      <Link className='btn btn-outline-dark my-3' to={`/admin/dashboard`}>
+        go back
       </Link>
-      <div className="row">
-        <div className="col-12">
-          <h2 className="text-center text-white my-3">Total Orders</h2>
+      
+     { orders.length===0 ?(
+          <h2 className="text-center">No Order Found</h2>
+      ) :
+       (<Table striped bordered responsive className='table-sm'>
+            <thead>
+              <tr>
+                <th className="text-center">NAME</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders.map((order, index) => {
+                return(
+                <tr key={index}>
+                  <td className="text-center py-4">{order.user.name}</td>
+                  <td className="text-center">
+                  <Link
+                    to={`/admin/order/detail/${order._id}`}
+                  >
+                  <Button className="brn-sm">Order detail</Button>
+                </Link>
+                  </td>
+                <td className="text-center">
+                  <Link
+                  to={`/admin/orderstatus/update/${order._id}`}>
+                    <Button className="brn-sm">Update Status</Button>
+                  </Link>
+                  </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+      </Table>)}
 
-          {orders.map((order, index) => {
-              return(<div key={index} className="row text-center mb-2 ">
-              <div className="col-4">
-                <h3 className="text-white text-left">{order.user.name}</h3>
-              </div>
-              <div className="col-4">
-                <Link
-                  className="btn btn-success"
-                  to={`/admin/order/detail/${order._id}`}
-                >
-                  <span className="">Order detail</span>
-                </Link>
-              </div>
-              <div className="col-4">
-                <Link
-                className="btn btn-success"
-                to={`/admin/orderstatus/update/${order._id}`}>
-                  <span className="">Update Status</span>
-                </Link>
-              </div>
-              </div>
-              )
-          })}
-        </div>
-      </div>
-    </Base>
+          
+    </>
     )
 }
 

@@ -1,19 +1,37 @@
 import React, {useState,useEffect} from 'react'
 import { Link } from 'react-router-dom';
 import { isAutheticated } from '../auth/helper';
-import Base from '../core/Base';
 import { getOrder,updateStatus } from './helper/adminapicall';
-
+import { Form, Button } from 'react-bootstrap'
+import FormContainer from '../user/helper/FormContainer'
+import * as emailjs from "emailjs-com";
+import {success_message,status_message} from "../backend";
 
 const UpdateOrderStatus = ({match}) => {
 
     const [status, setStatus] = useState("");
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
+    const [useremail, setUseremail] = useState("");
+    const [username, setUsername] = useState("");
 
-    const allStatus=["Cancelled", "Delivered", "Shipped", "Processing", "Recieved"];
+    const allStatus=["Cancelled", "Delivered", "Shipped", "Processing"];
     const {user,token} = isAutheticated();
-
+    const SendEmail=  (email,name)=>{
+ 
+        emailjs.send(process.env.REACT_APP_SERVICE_ID, process.env.REACT_APP_TEMPLET_ID, {
+            to_email:email,
+            to_name:name,
+            status_message:status_message,
+            status:status,
+            success:success_message
+        },process.env.REACT_APP_USER_ID)
+          .then((result) => {
+              console.log(result.text);
+          }, (error) => {
+              console.log(error.text);
+          }).catch(err=>{})
+        };
     const preload = (orderId) => {
         getOrder(orderId).then(data=>{
             
@@ -23,28 +41,29 @@ const UpdateOrderStatus = ({match}) => {
             }
             else
             {
-                setStatus(data.status);
+                const order=data[0];
+                setStatus(order.status);
+                setUseremail(order.user.email);
+                setUsername(order.user.name);
             }
-        })
+        }).catch(err=>{})
     }
-    const preloadStatus = ()=>{
-        
+    const preloadStatus = ()=>{    
     }
-
     useEffect(() => {
         preload(match.params.orderId);
       }, []);
 
     const goBack= () => (
-        <div className="mt-5">
-            <Link className="btn btn-sm btn-info mb-3" to="/admin/dashboard">
-                Admin Home
+        <div >
+            <Link className='btn btn-outline-dark my-3' to="/admin/dashboard">
+            go back
             </Link>
 
         </div>
     )
     
-    const handleChage = (event) => {
+    const handleChange = (event) => {
         setError("");
         setStatus(event.target.value);
     };
@@ -61,6 +80,7 @@ const UpdateOrderStatus = ({match}) => {
                     setError(error);
             }
             else{
+                SendEmail(useremail,username)
                 setError("");
                 setSuccess(true);
                 setStatus("");
@@ -70,60 +90,50 @@ const UpdateOrderStatus = ({match}) => {
 
     const successMessage = () => {
         if(success){
-            return <h4 className="text-success">Order status updated successfuly</h4>
+            return <h5 className="alert alert-success mt-3">Order status updated successfully</h5>
         }
     };
     
     const warningMessage = () => {
         if(error){
-            return <h4 className="text-success">Failed to update order status</h4>
+            return <h5 className="alert alert-danger mt-3">Failed to update order status</h5>
         }
     };
 
     const updateOrderStatusForm = () => (
-        <form>
-            <div className="form-group">
-                <p className="lead"> Enter the orderStatus</p>
-
-                <select
-                onChange={handleChage}
-                className="form-control"
-                value={status}
-                autoFocus
-                required
-                >
-                <option>Select</option>
-                {allStatus &&
+        <FormContainer>
+            <h1>Update Order Status</h1>
+            <Form>
+            {successMessage()}
+            {warningMessage()}
+            <Form.Group controlId='name'>
+              <Form.Label>Name</Form.Label>
+              <Form.Control as= "select"
+                onChange={handleChange}
+              >
+                  <option>{status}</option>
+                  {allStatus &&
                     allStatus.map((stat, index) => (
                     <option key={index} >
                         {stat}
                     </option>
                     ))}
-                </select>
+              </Form.Control>
+            </Form.Group>
 
-                <button onClick={onSubmit} className="btn btn-outline-info">
-                    Update status
-                </button>
-
-            </div>
-        </form>
+            <Button type='submit' onClick={onSubmit} variant='primary'>
+              Update Status
+            </Button> 
+            </Form>
+        </FormContainer>
+        
     )
 
     return (
-        <Base title="Create Category here" 
-        description="Add new Category" 
-        className="container bg-info p-4">
-
-            <div className="row bg-white rounded">
-                <div className="col-md-8 offset-md-2">
-                    {updateOrderStatusForm()}
-                    {goBack()}
-                    {successMessage()}
-                    {warningMessage()}
-                </div>
-            </div>
-
-        </Base>
+        <>
+        {goBack()}
+        {updateOrderStatusForm()}
+        </>
     )
 }
 

@@ -1,9 +1,6 @@
 import React,{useState} from 'react'
 import { API } from "../../backend";
 
-
-
-
 //category calls
 export const createCategory = (userId, token, category) => {
   return fetch(`${API}/category/create/${userId}`, {

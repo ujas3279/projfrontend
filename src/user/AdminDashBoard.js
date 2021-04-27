@@ -2,6 +2,7 @@ import React from "react";
 import Base from "../core/Base";
 import { isAutheticated } from "../auth/helper/index";
 import { Link } from "react-router-dom";
+import { Row, Col } from 'react-bootstrap'
 
 const AdminDashBoard = () => {
   const {
@@ -11,31 +12,31 @@ const AdminDashBoard = () => {
   const adminLeftSide = () => {
     return (
       <div className="card">
-        <h4 className="card-header bg-dark text-white">Admin Navigation</h4>
+        <h4 className="card-header text-center bg-dark text-white">Admin Navigation</h4>
         <ul className="list-group">
           <li className="list-group-item">
-            <Link to="/admin/create/category" className="nav-link text-success">
-              Create Categories
+            <Link to="/admin/create/category" className="nav-link text-center">
+              <h6>Create Categories</h6>
             </Link>
           </li>
           <li className="list-group-item">
-            <Link to="/admin/categories" className="nav-link text-success">
-              Manage Categories
+            <Link to="/admin/categories" className="nav-link text-center" >
+              <h6>Manage Categories</h6>
             </Link>
           </li>
           <li className="list-group-item">
-            <Link to="/admin/create/product" className="nav-link text-success">
-              Create Product
+            <Link to="/admin/create/product" className="nav-link text-center">
+              <h6>Create Product</h6>
             </Link>
           </li>
           <li className="list-group-item">
-            <Link to="/admin/products" className="nav-link text-success">
-              Manage Products
+            <Link to="/admin/products" className="nav-link text-center">
+            <h6>Manage Products</h6>
             </Link>
           </li>
           <li className="list-group-item">
-            <Link to="/admin/orders" className="nav-link text-success">
-              Manage Orders
+            <Link to="/admin/orders" className="nav-link text-center">
+            <h6>Manage Orders</h6>
             </Link>
           </li>
         </ul>
@@ -46,7 +47,7 @@ const AdminDashBoard = () => {
   const adminRightSide = () => {
     return (
       <div className="card mb-4">
-        <h4 className="card-header">Admin Information</h4>
+        <h3 className="card-header text-center">Admin Information</h3>
         <ul className="list-group">
           <li className="list-group-item">
             <span className="badge alert-success mr-2">Name:</span> {name}
@@ -63,16 +64,12 @@ const AdminDashBoard = () => {
     );
   };
   return (
-    <Base
-      title="Welcome to admin area"
-      description="Manage all of your products here"
-      className="container bg-success p-4"
-    >
-      <div className="row">
-        <div className="col-3">{adminLeftSide()}</div>
-        <div className="col-9">{adminRightSide()}</div>
-      </div>
-    </Base>
+    <>
+      <Row className="py-5">
+        <Col>{adminLeftSide()}</Col>
+        <Col sm={12} md={8}>{adminRightSide()}</Col>
+      </Row>
+    </>
   );
 };
 
