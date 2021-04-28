@@ -2,9 +2,8 @@ import React, {Fragment} from "react";
 import { Navbar, Nav, Container } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 import {  withRouter } from "react-router-dom";
-import { signout, isAutheticated } from "../auth/helper/index";
-
-
+import { signout, isAutheticated } from "../auth/helper/index"; 
+import Swal from 'sweetalert2'
 const currentTab = (history, path) => {
   if (history.location.pathname === path) {
     return { color: "#2ecc72" };
@@ -64,9 +63,22 @@ const Menu = ({ history }) => (
               {isAutheticated() && (
 
                 <LinkContainer to="/" onClick={() => {
-                  signout(() => {
-                    history.push("/")
+                  Swal.fire({
+                    title: 'Are you sure?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#525453',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, Sign Out'
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      signout(() => {
+                        history.push("/")
+                      })
+                    }
                   })
+                  
+                  
                 }}>
                   <Nav.Link>
                     Signout

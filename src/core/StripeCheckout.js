@@ -7,6 +7,7 @@ import StripeCheckoutButton from "react-stripe-checkout";
 import { API } from "../backend";
 import { createOrder } from "./helper/OrderHelper";
 import * as emailjs from "emailjs-com";
+import Swal from 'sweetalert2'
 require('dotenv').config();
 
 
@@ -39,6 +40,17 @@ let famount=0;
     famount=amount;
     return amount;
   };
+  const successPopup=()=>{
+    success && (
+      Swal.fire({
+        icon: 'success',
+        title: 'Your Order has been Placed Successfully!',
+        showConfirmButton: false,
+        timer: 3000}
+      )
+      
+    )
+  }
   const SendEmail=  (data)=>{
  
     emailjs.send(process.env.REACT_APP_SERVICE_ID, process.env.REACT_APP_ORDER_TEMPLET, data,process.env.REACT_APP_USER_ID)
@@ -94,7 +106,7 @@ let famount=0;
         })
         setReload(!reload);
         createOrder(userId, usertoken, orderData);
-        SendEmail(maildata);
+        //SendEmail(maildata);
         
       })
       .catch(error => console.log(error));
@@ -135,6 +147,7 @@ let famount=0;
 
   
   return (
+    <>
     <div>
       
       {success && (
@@ -158,6 +171,8 @@ let famount=0;
           </ListGroup>
         </Card>
     </div>
+    {successPopup()}
+    </>
   );
 };
 
