@@ -119,8 +119,9 @@ let famount=0;
                   setData({
                     loading: true
                   })}}>{loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
-                  {loading && <span>Please wait...</span>}
-                  {!loading && <span>Proceed to Checkout</span>}</Button>
+                  {loading && !buttonloader && <span>Please wait...</span>}
+                  {!loading && <span>Proceed to Checkout</span>}
+                  {buttonloader && <span>Processing...</span>}</Button>
       </StripeCheckoutButton>
     ) : (
       <Link to="/signin">
