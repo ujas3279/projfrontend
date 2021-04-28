@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { isAutheticated } from "../auth/helper";
 import { cartEmpty, loadCart } from "./helper/CartHelper";
-import { ListGroup, Image, Form, Button, Card } from 'react-bootstrap'
-import { Link } from "react-router-dom";
+import { ListGroup, Image, Form, Button, Card, Alert } from 'react-bootstrap'
+import { Link, Redirect } from "react-router-dom";
 import StripeCheckoutButton from "react-stripe-checkout";
 import { API } from "../backend";
 import { createOrder } from "./helper/OrderHelper";
@@ -17,10 +17,13 @@ const StripeCheckout = ({
 }) => {
   const [data, setData] = useState({
     loading: false,
+    buttonloader:false,
     success: false,
     error: "",
     address: ""
   });
+  
+  const {loading, success,buttonloader, error, address} = data
 
   const usertoken = isAutheticated() && isAutheticated().token;
   const userId = isAutheticated() && isAutheticated().user._id;
@@ -46,6 +49,10 @@ let famount=0;
       })
     };
   const makePayment = token => {
+    setData({
+      ...data,
+      loading:true,buttonloader:true
+    }) 
     const body = {
       token,
       products
@@ -59,6 +66,7 @@ let famount=0;
       body: JSON.stringify(body)
     })
       .then(response => {
+        
         let useraddress=token.card.name +","+token.card.address_line1+","+token.card.address_city+","+token.card.address_zip+","+token.card.address_country;
         const orderData={
             products:products,
@@ -70,41 +78,70 @@ let famount=0;
               to_email:useremail,
               to_name:token.card.name,
               address:useraddress,
-              amount:famount
-              
-        }  
+              amount:famount,
+              product_name:products.name
+        } 
+        setData({
+          ...data,
+          success:true
+        }) 
         cartEmpty(()=>{    
+        })  
+        setData({
+          ...data,
+          loading: false,
+          success:true,buttonloader:false
         })
         setReload(!reload);
         createOrder(userId, usertoken, orderData);
-        SendEmail(maildata);
+        //SendEmail(maildata);
+        
       })
       .catch(error => console.log(error));
   };
 
   const showStripeButton = () => {
-    return isAutheticated() ? (
+    return <>
+    
+    {isAutheticated() ? (
       <StripeCheckoutButton
         stripeKey = {process.env.REACT_APP_PUB_KEY}
         token={makePayment}
         amount={getFinalAmount() * 100}
-        name="HandCrafts"
+        name="comsdotcom"
         currency="inr"
         shippingAddress
+        closed={()=>{if(!success && !buttonloader){setData({...data,loading:false})}}}
       >
         <Button type='button'
                 className='btn-block'
-                disabled={products.length === 0}>Process To Checkout</Button>
+                disabled={products.length === 0 || loading} onClick={() => {
+                  setData({
+                    loading: true
+                  })}}>{loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
+                  {loading && <span>Please wait...</span>}
+                  {!loading && <span>Proceed to Checkout</span>}</Button>
       </StripeCheckoutButton>
     ) : (
       <Link to="/signin">
         <button className="btn btn-warning">Signin</button>
       </Link>
-    );
+    )}
+    </>
   };
+  
 
+
+  
   return (
     <div>
+      
+      {success && (
+        <Alert variant="success">
+        Your order is successfully placed. Check your{' '}
+        <Alert.Link href={`/user/orders/${userId}`}>order here</Alert.Link>.
+      </Alert>
+      )}
       <Card>
           <ListGroup variant='flush'>
             <ListGroup.Item>
