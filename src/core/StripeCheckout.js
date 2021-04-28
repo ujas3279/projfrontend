@@ -94,7 +94,7 @@ let famount=0;
         })
         setReload(!reload);
         createOrder(userId, usertoken, orderData);
-        //SendEmail(maildata);
+        SendEmail(maildata);
         
       })
       .catch(error => console.log(error));
