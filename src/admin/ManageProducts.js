@@ -7,7 +7,7 @@ import ImageHepler from '../core/helper/ImageHepler';
 const ManageProducts = () => {
     const [products, setProducts] = useState([]);
     const {user,token} = isAutheticated();
-
+    const [loader, setloader] = useState(true);
     const preload = () => {
         getProducts().then(data => {
             if(data.error){
@@ -15,6 +15,7 @@ const ManageProducts = () => {
             }
             else{
                 setProducts(data);
+                setloader(false);
             }
         }).catch(err=>{})
     }
@@ -40,8 +41,14 @@ const ManageProducts = () => {
       <Link className='btn btn-outline-dark my-3' to={`/admin/dashboard`}>
         go back
       </Link>
-      
-      {products.length===0 ? (
+      {loader && (
+        <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      )}
+      {products.length===0 && !loader ? (
         <h2 className="text-center">NO PRODUCTS FOUND</h2>
       ):(<Table striped bordered responsive className='table-sm'>
             <thead>

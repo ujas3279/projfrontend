@@ -7,7 +7,7 @@ import { Table, Button } from 'react-bootstrap';
 const ManageCategories = () => {
     const [Categories, setCategories] = useState([]);
     const {user,token} = isAutheticated();
-
+    const [loader, setloader] = useState(true)
     const preload = () => {
         getCategories().then(data => {
             if(data.error){
@@ -15,6 +15,7 @@ const ManageCategories = () => {
             }
             else{
                 setCategories(data);
+                setloader(false)
             }
         }).catch(err=>{})
     }
@@ -40,8 +41,14 @@ const ManageCategories = () => {
       <Link className='btn btn-outline-dark my-3' to={`/admin/dashboard`}>
         go back
       </Link>
-
-      {Categories.length===0 ? (
+      {loader && (
+        <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      )}
+      {Categories.length===0 && !loader ? (
         <h2 className="text-center">NO CATEGORY FOUND</h2>
       ):(<Table striped bordered responsive className='table-sm'>
             <thead>

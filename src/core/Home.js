@@ -17,6 +17,7 @@ export default function Home() {
       }
       else{
         setProducts(data);
+        setloader(false);
       }
     }).catch(err=>{})
   }
@@ -27,7 +28,7 @@ export default function Home() {
 
   useEffect(() => {
     loadAllProduct()
-    setloader(false);
+    
   }, [reload])
 
   return (

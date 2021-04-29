@@ -7,7 +7,7 @@ import {  Table, Button } from 'react-bootstrap';
 const ManageOrders = () => {
 
     const [orders, setOrders] = useState([]);
-
+    const [loader, setloader] = useState(true);
     const {user,token} = isAutheticated();
 
     const preload = () => {
@@ -17,6 +17,7 @@ const ManageOrders = () => {
             }
             else{
                 setOrders(data);
+                setloader(false);
             }
         }).catch(err=>{})
     }
@@ -33,8 +34,14 @@ const ManageOrders = () => {
       <Link className='btn btn-outline-dark my-3' to={`/admin/dashboard`}>
         go back
       </Link>
-      
-     { orders.length===0 ?(
+      {loader && (
+        <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      )}
+     { orders.length===0 && !loader ?(
           <h2 className="text-center">No Order Found</h2>
       ) :
        (<Table striped bordered responsive className='table-sm'>
