@@ -16,6 +16,7 @@ const CustomerOrderDetail = ({match}) => {
         address: "",
         transaction_id:"",
         products:[],
+        orderDate:"",
         error:""
 
       });
@@ -29,6 +30,7 @@ const CustomerOrderDetail = ({match}) => {
         address,
         transaction_id,
         products,
+        orderDate,
         error
       } = values;
 
@@ -54,7 +56,8 @@ const CustomerOrderDetail = ({match}) => {
                     amount: order.amount,
                     address: order.address,
                     transaction_id: order.transaction_id,
-                    products: order.products
+                    products: order.products,
+                    orderDate:order.createdAt
                 })
             }
         }).catch(err=>{})
@@ -83,6 +86,10 @@ const CustomerOrderDetail = ({match}) => {
               <p>
                 <strong>Address:</strong>
                 {' '}{address}
+              </p>
+              <p>
+                <strong>Order Date:</strong>
+                {' '}{orderDate}
               </p>
               <p>
                 <strong>Status:</strong> {status}
