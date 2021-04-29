@@ -9,6 +9,7 @@ export default function Home() {
   const [error, setError] = useState(false)
   const [search, setSearch] = useState("");
   const [reload, setReload] = useState(false);
+  const [loader, setloader] = useState(true);
   const loadAllProduct = () => {
     getProducts().then(data => {
       if(data.error){
@@ -26,11 +27,12 @@ export default function Home() {
 
   useEffect(() => {
     loadAllProduct()
+    setloader(false);
   }, [reload])
 
   return (
     <>
-    
+     
       
       <Form.Group controlId='search' className="search">
               <Form.Control 
@@ -42,6 +44,13 @@ export default function Home() {
               ></Form.Control>
       </Form.Group>
       {(search=="") && (<h1>Latest Products</h1>)}
+      {loader && (
+        <div class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      )}
       <Row>
           {products.map((product, index) => (
             product.name.toLowerCase().match(`${search}`) && (<Col key={index} sm={12} md={6} lg={4} xl={3}>
