@@ -23,11 +23,11 @@ const Menu = ({ history }) => (
           <Navbar.Collapse id='basic-navbar-nav'>
             
             <Nav className='ml-auto'>
-              <LinkContainer style={currentTab(history, "/cart")} to='/cart'>
+            {isAutheticated() && isAutheticated().user.role ===0 && (<LinkContainer style={currentTab(history, "/cart")} to='/cart'>
                 <Nav.Link>
                   <i className='fas fa-shopping-cart'></i> Cart
                 </Nav.Link>
-              </LinkContainer>
+              </LinkContainer>)}
 
               {isAutheticated() && isAutheticated().user.role ===0 && (
                 <LinkContainer style={currentTab(history, "/user/dashboard")}  to='/user/dashboard'>
@@ -47,6 +47,11 @@ const Menu = ({ history }) => (
 
               {!isAutheticated() && (
                 <Fragment>
+                  <LinkContainer style={currentTab(history, "/cart")} to='/cart'>
+                <Nav.Link>
+                  <i className='fas fa-shopping-cart'></i> Cart
+                </Nav.Link>
+              </LinkContainer>)
                   <LinkContainer style={currentTab(history, "/signup")}  to='/signup'>
                     <Nav.Link>
                       Signup

@@ -6,7 +6,7 @@ import { Row, Col, Image, ListGroup, Card, Button, Form } from 'react-bootstrap'
 import {addItemToCart, removeItemFromCart } from './helper/CartHelper';
 import { getProductsById } from './helper/coreapicalls';
 import ImageHepler from './helper/ImageHepler';
-
+import { isAutheticated } from '../auth/helper';
 
 const ProductDetail=({match})=>{
   const [product, setproduct] = useState("");
@@ -85,8 +85,8 @@ return (
 
                   
 
-                  <ListGroup.Item>
-                    <Button
+                  {isAutheticated() ? isAutheticated().user.role ===0 && (<ListGroup.Item>
+                   <Button
                       onClick={addToCart}
                       className='btn-block'
                       type='button'
@@ -94,7 +94,16 @@ return (
                     >
                       Add To Cart
                     </Button>
-                  </ListGroup.Item>
+                  </ListGroup.Item>):(<ListGroup.Item>
+                   <Button
+                      onClick={addToCart}
+                      className='btn-block'
+                      type='button'
+                      disabled={product.stock === 0}
+                    >
+                      Add To Cart
+                    </Button>
+                  </ListGroup.Item>)}
                 </ListGroup>
               </Card>
             </Col>
