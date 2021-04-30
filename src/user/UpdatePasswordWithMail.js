@@ -15,10 +15,11 @@ const UpdatePasswordWithMail = ({match}) => {
     error: "",
     success: false,
     didRedirect: false,
+    loading:false,
     formData: ""
   });
 
-  const {password,confirm_password, error, success, didRedirect,formData } = values;
+  const {password,loading,confirm_password, error, success, didRedirect,formData } = values;
 
   const handleChange = name => event => {
 
@@ -37,11 +38,11 @@ const UpdatePasswordWithMail = ({match}) => {
     
     else if(new RegExp(/[0-9]/).test(password) && new RegExp(/[a-z]/).test(password) && new RegExp(/[A-Z]/).test(password) && new RegExp(/[!#@$%^&*)(+=._-]/).test(password))
     {
+      setValues({...values,loading:true});
       forgotPassword(match.params.userId,match.params.uniquestring,{password})
       .then(data => {
-          console.log(data)
         if (data.error) {
-          setValues({ ...values, error: data.error, success: false });
+          setValues({ ...values, error: data.error, success: false,loading:false });
         } else {
           setValues({
             ...values,
@@ -49,6 +50,7 @@ const UpdatePasswordWithMail = ({match}) => {
             confirm_password:"",
             error: "",
             success: true,
+            loading:false,
             didRedirect: false
           });
         }
@@ -93,8 +95,10 @@ const UpdatePasswordWithMail = ({match}) => {
           ></Form.Control>
         </Form.Group>
 
-        <Button onClick={onSubmit} type='submit' variant='primary'>
-          Change
+        <Button onClick={onSubmit} type='submit' variant='primary' disabled={loading}>
+        {loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
+          {!loading && <span>Change</span>}
+          {loading && <span>Changing...</span>}
         </Button>
       </Form>
 

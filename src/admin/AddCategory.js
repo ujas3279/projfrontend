@@ -10,7 +10,7 @@ const AddCategory = () => {
     const [name, setName] = useState("");
     const [error, setError] = useState(false);
     const [success, setSuccess] = useState(false);
-    const [loading, setloading] = useState(false)
+    const [loading, setloading] = useState(false);
 
     const {user,token} = isAutheticated();
 
@@ -81,8 +81,8 @@ const AddCategory = () => {
 
             <Button type='submit' onClick={onSubmit} variant='primary' disabled={loading}>
             {loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
-          {loading && <span>Add Category</span>}
-          {!loading && <span>Adding...</span>}
+          {!loading && <span>Add Category</span>}
+          {loading && <span>Adding...</span>}
             </Button> 
             </Form>
         </FormContainer>
