@@ -131,7 +131,7 @@ const Signin = () => {
 
   return (
     <>
-      {loadingMessage()}
+      
       {errorMessage()}
       {signInForm()}
       {performRedirect()}

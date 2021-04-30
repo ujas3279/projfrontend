@@ -132,7 +132,7 @@ const Signup = () => {
             onChange={handleChange("confirm_password")}
           ></Form.Control>
         </Form.Group>
-
+        
         <Button onClick={onSubmit} type='submit' variant='primary' disabled={loading}>
           {loading && (<i className="fa fa-refresh fa-spin " style={{ marginRight:"5px"}}/>)}
           {loading && <span>Signing up....</span>}
