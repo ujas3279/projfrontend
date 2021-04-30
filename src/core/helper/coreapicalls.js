@@ -12,7 +12,6 @@ export const getProducts = () => {
 export const getProductsById = (productId) => {
     return fetch(`${API}/product/${productId}`,{method: "GET"})
     .then( response => {
-        console.log(response)
         return response.json();
     })
     .catch(err => console.log(err));

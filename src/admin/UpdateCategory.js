@@ -70,7 +70,7 @@ const UpdateCategory = ({match}) => {
                 setError("");
                 setSuccess(true);
                 setName("");
-                setloading(true);
+                setloading(false);
             }
         }).catch(err=>{})
     }

@@ -5,7 +5,7 @@ import { getOrder} from "../user/helper/userapicalls"
 import {  Table, Button } from 'react-bootstrap';
 
 const CustomerOrders = () => {
-
+    
     const [orders, setOrders] = useState([]);
     const [loader, setloader] = useState(true);
     const {user,token} = isAutheticated();
